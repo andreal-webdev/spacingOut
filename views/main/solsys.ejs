@@ -1,0 +1,61 @@
+<%- include('../partials/head.ejs') %>
+<%- include('../partials/header.ejs') %>
+
+
+<div class="container">
+    
+    <% for (let i = 0; i < modelTitles.length; i++) { %>
+        <div class="modal fade" id="modelModal<%= i %>" tabindex="-1" role="dialog" aria-labelledby="modelModalLabel<%= i %>" aria-hidden="true">
+            <div class="modal-dialog modal1 modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-rocket-takeoff-fill"></i></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h2 class="mt-4 text-white "><%= modelTitles[i] %></h2>
+                        <p class="text-white"> <%= info[i] %></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+
+    <div id="modelCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <% for (let i = 0; i < modelTitles.length; i++) { %>
+                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                    <model-viewer class="ar-model" src="<%= modelPaths[i] %>" ar ar-modes="webxr scene-viewer quick-look" camera-controls poster="<%= modelPaths[i] %>" shadow-intensity="1.21">
+                        <button slot="ar-button" style="background-color: white; border-radius: 4px; border: none; position: absolute; top: 50px; left: 60px; ">
+                            <img src="assets/arlcon.svg" alt="">
+                        </button>
+                    </model-viewer>
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3><%= modelTitles[i] %></h3>
+                        <button class="btn btn-primary" style="background-color: #6232A6;" data-toggle="modal" data-target="#modelModal<%= i %>">Learn more</button>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    
+        <a class="carousel-control-prev" href="#modelCarousel" role="button" data-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        </a>
+        <a class="carousel-control-next" href="#modelCarousel" role="button" data-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        </a>
+    </div>
+</div>
+
+
+
+
+
+
+<%- include('../partials/foot.ejs') %>
+
+
+

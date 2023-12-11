@@ -1,0 +1,31 @@
+<%- include('../partials/head.ejs') %>
+<%- include('../partials/header.ejs') %>
+
+<h1 class="pic text-center">Astronomy Picture of the Day <i class="bi bi-camera2"></i></h1>
+<div class="card bg-dark text-white" style="width: 50rem;" id="apod-container">
+   
+  
+    <% if (picData.media_type === 'image') { %>
+        <img src="<%= picData.url %>" class="card-img-top" alt="<%= picData.title %>">
+        
+        <div class="card-body">
+            
+            <h5 class="card-title"><%= picData.title %></h5>
+            <p class="card-text"><%= picData.date %></p>
+            <p class="card-text"><%= picData.explanation %></p>
+            <p class="card-text">Copyright:<%= picData.copyright %></p>
+            
+        </div>
+       
+    <% } else if (picData.media_type === 'video') { %>
+      <iframe width="560" height="315" src="<%= picData.url %>" allowfullscreen></iframe>
+    <% } %>
+    
+</div>
+
+
+
+   
+
+
+<%- include('../partials/foot.ejs') %>

@@ -1,0 +1,145 @@
+/*default***************************/
+html{
+    font-family: 'Roboto';
+    
+}
+
+body{
+    margin: 0;
+    background-image: url('/assets/dark.jpeg');
+    background-size: cover;
+    margin: 0;
+    height: 100vh
+}
+
+.btn{
+    border: none;
+}
+
+
+/*nav bar*/
+.nav-link{
+    color: #fff;
+}
+
+/*Hero sections*/
+/*hero home*/
+.hero-section {
+    background-image: url('/assets/astro.jpeg');
+    background-size: cover;
+    margin: 0;
+    height: 100vh;
+    color: #fff; 
+}
+
+#hero {
+    padding: 0;
+}
+
+/*Hero video mars*/
+
+video {
+    
+    width: 100%;
+    height: auto;
+}
+
+.mars-video-hero{
+    margin-bottom: 50px;
+}
+
+/*h1 mar pic and home*/
+.display-4, .pic, .mars{
+    font-family: 'Orbitron';
+    color: #69359c;
+}
+
+.text-center{
+    font-weight: 800;
+    margin-top: 50px;
+    margin-bottom: 30px;
+}
+
+.card{
+    margin: auto;
+    border: none;
+    margin-bottom: 20px;
+}
+
+/*3D models*/
+.ar-model{
+    width: 100%;
+    height: 50rem;
+    margin: 10px auto;
+    display: block;
+}
+
+/*modal*/
+.modal-body {
+    background-image: url('/assets/dark.jpeg');
+    background-size: cover;
+    color: #ffffff; /* Set the text color */
+}
+  
+.modal1 {
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 0;
+    transform: translateX(100%);
+}
+
+.modal-header{
+    background-color: #000000;
+    color: #ffffff; 
+}
+
+.close {
+    color: #fff;
+    outline: none;
+    background: none;
+    
+}
+
+/*Mars page*/
+.marsWeather{
+    width:100%;
+    height: 620px;
+}
+
+.credits{
+    color: #6e6e6e;
+}
+
+
+.card-body{
+    
+    background-color: #000000e3;
+    color: #ffffff;
+}
+
+@media (min-width: 992px) and (max-width: 1399px){
+    .marsWeather{
+        height:590px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px){
+    .marsWeather{
+        height:540px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px){
+    .marsWeather{
+        height:510px;
+    }
+}
+
+@media (max-width: 576px){
+    .marsWeather{
+        height:504px;
+    }
+}
+
+

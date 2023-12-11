@@ -1,0 +1,42 @@
+<%- include('../partials/head.ejs') %>
+<%- include('../partials/header.ejs') %>
+
+<div class="jumbotron jumbotron-fluid mars-video-hero">
+  <video class="video-fluid videoHero" autoplay loop muted playsinline Video by>
+    <source src="assets/mars.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+  <a class="credits" href="https://pixabay.com/users/aivreasastii-28244525/?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=143020">Marius Stancu</a> from <a class="credits" href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=video&utm_content=143020">Pixabay</a> >>
+ 
+</div>
+
+<div class="container mars-container">
+  <iframe class="marsWeather" src='https://mars.nasa.gov/layout/embed/image/mslweather/'  frameborder='0' scrolling='no'></iframe>
+</div>
+
+<div class="container">
+    <h1  class="mars text-center mt-5 mb-4">Mars Rover Photos</h1>
+    <% if (photos && photos.length > 0) { %>
+      <div class="row">
+        <% const startIndex = Math.max(0, photos.length - 15); %>
+        <% for (let i = photos.length - 1; i >= startIndex; i--) { %>
+          <div class="col-md-4 mb-4">
+            <div class="card">
+              <img src="<%= photos[i].img_src %>" class="card-img-top" alt="Mars Rover Photo">
+              <div class="card-body">
+                <p class="card-text">Earth Date: <%= photos[i].earth_date %></p>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    <% } else { %>
+      <p>No Mars rover photos available.</p>
+    <% } %>
+</div>
+
+
+
+
+
+<%- include('../partials/foot.ejs') %>

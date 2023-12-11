@@ -1,131 +1,119 @@
-// ----- CODE MODIFICATION NOT REQUIRED UNTIL LINE 40 OF THIS FILE -----
-
-// // Required modules
+// Required modules
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const database = require('./database/database.js');
-
-const PORT = 8000;
-
+const axios = require('axios');
+const apiKey = 'tG34GN9vTAe6GlJJxqSlRSt1tgHXbaRrP4FS4sdK';
 const app = express();
-// app.use(bodyParser());
-// app.set('view engine', 'ejs');
+const port = process.env.Port || 8000; 
 
-// // Function to get a random ID from the breeds collection
-// function breedRandomizer(breeds) {
-//     let breedsIDs = [];
-//     for (const i in breeds) {
-//         breedsIDs.push(breeds[i]._id.toString());
-//     }
-//     // Generate a random index within the bounds of the breedsIDs array's length
-//     const randomIndex = Math.floor(Math.random() * breedsIDs.length);
-//     // console.log(breedsIDs[randomIndex]);
-//     return(breedsIDs[randomIndex]);
-// }
+app.use(express.urlencoded({ extended: true }));
 
-// // Function to get a random ID from the facts collection
-// function factRandomizer(facts) {
-//     let factsIDs = [];
-//     for (const i in facts) {
-//         factsIDs.push(facts[i]._id.toString());
-//     }
-//     // Generate a random index within the bounds of the factsIDs array's length
-//     const randomIndex = Math.floor(Math.random() * factsIDs.length);
-//     // console.log(factsIDs[randomIndex]);
-//     return(factsIDs[randomIndex]);
-// }
+app.set('view engine', 'ejs');
 
-// // Route for the homepage
-// app.get('/', async (req, res) => {
-//     // ----- Random Breed -----
-    
-//     // Find all the breeds from the database and assign it to the breeds variable.
-//     let breeds = await database.collections.breeds.find({}).toArray();
+app.use(express.static(path.join(__dirname,'public')));
 
-//     // Call the breedRandomizer function to get a random breed ID.
-//     let randomBreed = breedRandomizer(breeds);
-
-//     // Use the random breed ID to get a random breed object from MongoDB
-//     let breedId = new database.ObjectId(randomBreed);
-//     let breed = await database.collections.breeds.findOne(breedId);
-
-//     // Console log the random object you have fetched before rendering it on the home page
-//     console.log(breed);
-
-//     // ----- Random Fact -----
-//     // Find all the facts from the database and assign it to the facts variable.
-//     let facts = await database.collections.facts.find({}).toArray();
-
-//     // Call the factRandomizer function to get a random fact ID.
-//     let randomFact = factRandomizer(facts);
-
-//     // Use the random breed ID to get a random breed object from MongoDB
-
-//     let factId = new database.ObjectId(randomFact);
-//     let fact = await database.collections.facts.findOne(factId);
-
-//     // Console log the random object you have fetched before rendering it on the home page
-//     console.log(fact);
-
-//     // Render the homepage and pass the random breed object
-//     res.render('index.ejs', {breed:breed, fact:fact});
-   
-// });
-
-// // Route to display all the breeds
-// app.get('/breeds', async (req, res) => {    
-//    // Find all the breeds from the database
-//     let breeds = await database.collections.breeds.find({}).toArray();
-//      // Render the breeds file in the cats folder under views and pass the breeds found to the template
-//     res.render('cats/breeds.ejs', {breeds:breeds});
-// });
-
-// // Route to display all the facts
-// app.get('/facts', async (req, res) => {
-//     // Find all the facts from the database
-//     let facts = await database.collections.facts.find({}).toArray();    
-    
-//     // Render the facts file in the cats folder under views and pass the facts found to the template    
-//     res.render('cats/facts.ejs', {facts:facts});
-
-// });
-
-// // Route to display breed by ID
-// app.get('/breed/:breedId', async (req, res) => {
-//     // Get the breedId parameter from the URL
-//     let id = req.params.breedId;  
-//     // Convert the ID from the URL into the proper ObjectId format expected by MongoDB
-//     let objectId = new database.ObjectId(id);
-//     // Find the breed object from MongoDB using the provided ID
-//     let breed = await database.collections.breeds.findOne(objectId);
-//     // Render the breed file in the cats folder under views and pass the breed found using the provided to the template
-//     res.render('cats/breed.ejs', {breed: breed});
-// });
-
-// // Route to display fact by ID
-// app.get('/fact/:factId', async (req, res) => {
-//     // Get the factId parameter from the URL
-//     let id = req.params.factId;
-//     // Convert the ID from the URL into the proper ObjectId format expected by MongoDB
-//     let objectId = new database.ObjectId(id);
-//     // Find the fact object from MongoDB using the provided ID
-//     let fact = await database.collections.facts.findOne(objectId);
-//     // Render the fact file in the cats folder under views and pass the fact found using the provided to the template
-//     res.render('cats/fact.ejs', {fact: fact});
-
-// });
-
-app.listen(PORT, async () => {
-   
-    console.log(`Server started on port ${PORT}`);
+app.get('/', async (req, res) => { 
+    let ejs = require('ejs');
+    let index = await ejs.renderFile(path.join(__dirname, 'views/index.ejs'));
+    res.send(index);    
 });
 
-// app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/pic', async (req, res) => {
+    try {
+       
+        const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+      
+  
+        res.render('main/pic.ejs', { picData: data });
+    } catch (error) {
+        console.error('Error fetching APOD:', error);
+        res.status(500).send('Internal Server Error');
+    }
+   
+});
+
+app.get('/mars', async (req, res) => {
+    try {
+      
+      const roverName = 'curiosity'; 
+      const apiUrl = `https://api.nasa.gov/mars-photos/api/v1/rovers/${roverName}/photos?sol=1000&api_key=${apiKey}`;
+      const response = await axios.get(apiUrl);
+      
+      if (response.status === 200) {
+
+        const photos = response.data.photos;
+        res.render('main/mars.ejs', { photos });
+
+      } else {
+
+        console.error(`Error fetching Mars rover photos: ${response.status} - ${response.statusText}`);
+        res.status(response.status).send(`Error: ${response.statusText}`);
+      }
+
+    } catch (error) {
+      console.error('Error fetching Mars rover photos:', error.message);
+      res.status(500).send('Internal Server Error');
+    }
+});
+
+
+app.get('/solsys', (req, res) => {
+  const numberOfModels = 9
+ 
+  res.render('main/solsys.ejs', {
+    modelTitles: ["Sun", "Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune"],
+
+    info: ["The Sun is the center of our solar system, a giant ball of hot, glowing gas that provides light and energy for all the planets. \
+    It is composed mostly of hydrogen and helium and generates energy through a process called nuclear fusion. The Sun's gravitational pull keeps all the planets in orbit.",//
+    
+    "Mercury is the closest planet to the Sun and experiences extreme temperature variations. Despite its proximity to the Sun, it has a very thin atmosphere and is heavily cratered,\
+    resembling Earth's Moon. A day on Mercury is longer than its year.",
+
+    "Venus is often called Earth's 'sister planet' due to its similar size and mass. It has a thick atmosphere, \
+    mostly composed of carbon dioxide, causing a runaway greenhouse effect. Venus rotates on its axis very slowly, and a day on Venus is longer than its year.", 
+
+    "Earth is the only known planet to support life, with a diverse range of ecosystems and climates. It has a protective atmosphere and a magnetic field that shields it from harmful solar radiation. \
+    Earth's rotation gives rise to day and night, and its axial tilt causes seasons.",
+
+    "Mars is known as the 'Red Planet' due to its rusty, iron-rich soil. \
+    It has the tallest volcano and the deepest canyon in the solar system. NASA's rovers have been exploring its surface for signs of past life.",
+
+    "Jupiter is the largest planet, with a strong magnetic field and an iconic Great Red Spot—a giant storm. It has over 75 known moons,\
+    including the four Galilean moons: Io, Europa, Ganymede, and Callisto.",
+
+    "Saturn is famous for its stunning ring system, composed of ice and rock particles. \
+    It has the second-largest moon in the solar system, Titan, with an atmosphere and lakes of liquid methane.",
+
+    "Uranus rotates on its side, likely due to a collision early in its history. It has a pale blue-green color due to the presence of methane in its atmosphere.",
+
+    "Neptune is the farthest known planet from the Sun and has strong winds and a dynamic atmosphere. It has a dark storm system called the Great Dark Spot, similar to Jupiter's Great Red Spot."],  // Replace with your additional information
+    modelPaths: Array.from({ length: numberOfModels }, (_, i) => `assets/model-${i + 1}.glb`)
+  });
+});
+
+
+
+app.listen(port, () => {
+    console.log(`App listening on port ${port}`);
+});
+
+
+
+
+// app.listen(PORT, async () => {
+    // await database.setup();
+    // console.log(`Server started on port ${PORT}`);
+// });
+
+
 
 // process.on('SIGTERM', () => {
 //     app.close(() => {
 //         database.client.close();
 //     });
 // });
-
